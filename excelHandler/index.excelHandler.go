@@ -4,18 +4,17 @@ import (
 	"fmt"
 
 	"github.com/xuri/excelize/v2"
-	//"excelHandler"
 )
 
 func OpenAndShowCells(file string, sheet string) {
 	f, err := excelize.OpenFile(file)
 	if err != nil {
-		fmt.Println(err)
+		fmt.Println("(1) ", err)
 		return
 	}
 	defer func() {
 		if err := f.Close(); err != nil {
-			fmt.Println(err)
+			fmt.Println("(2) ", err)
 		}
 	}()
 	// Obtener valor de la celda por el nombre y el eje de la hoja de trabajo dado.
@@ -28,7 +27,7 @@ func OpenAndShowCells(file string, sheet string) {
 	// Obtener todas las filas en el Sheet1.
 	rows, err := f.GetRows(sheet)
 	if err != nil {
-		fmt.Println(err)
+		fmt.Println("(3) ", err)
 		return
 	}
 	for _, row := range rows {
