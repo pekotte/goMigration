@@ -1,4 +1,4 @@
-package main
+package excelhandler
 
 import (
 	"fmt"
@@ -7,8 +7,8 @@ import (
 	//"excelHandler"
 )
 
-func main() {
-	f, err := excelize.OpenFile("MyTool.xlsx")
+func OpenAndShowCells(file string, sheet string) {
+	f, err := excelize.OpenFile(file)
 	if err != nil {
 		fmt.Println(err)
 		return
@@ -26,7 +26,7 @@ func main() {
 	}
 	fmt.Println(cell)*/
 	// Obtener todas las filas en el Sheet1.
-	rows, err := f.GetRows("Hoja1")
+	rows, err := f.GetRows(sheet)
 	if err != nil {
 		fmt.Println(err)
 		return
