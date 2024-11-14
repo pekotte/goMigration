@@ -6,7 +6,7 @@ import (
 	"github.com/xuri/excelize/v2"
 )
 
-func OpenAndShowCells(file string, sheet string) {
+func OpenAndShowAllCells(file string, sheet string) {
 	f, err := excelize.OpenFile(file)
 	if err != nil {
 		fmt.Println("(1) ", err)
@@ -38,4 +38,25 @@ func OpenAndShowCells(file string, sheet string) {
 		fmt.Println()
 		fmt.Println("======================================================================")
 	}
+}
+
+func OpenAndShowOneCells(file string, sheet string, cell string) string {
+	f, err := excelize.OpenFile(file)
+	if err != nil {
+		fmt.Println("(1) ", err)
+		return ""
+	}
+	defer func() {
+		if err := f.Close(); err != nil {
+			fmt.Println("(2) ", err)
+		}
+	}()
+	// Obtener valor de la celda por el nombre y el eje de la hoja de trabajo dado.
+	mycell, err := f.GetCellValue(sheet, cell)
+	if err != nil {
+		fmt.Println(err)
+		return ""
+	}
+	//fmt.Println(mycell)
+	return mycell
 }
