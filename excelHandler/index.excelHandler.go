@@ -11,13 +11,18 @@ var myFile string = "MyTool.xlsx"
 var mySheet string = "Hoja1"
 
 const (
-	CLIENT_COD     string = "D"
-	CLIENT_NAME    string = "E"
+	CLIENT_COD_INT  string = "D"
+	CLIENT_NAME_INT string = "E"
+	//----------------------------------//
+	CLIENT_NAME string = "F"
+	//----------------------------------//
+	PROYECT_NAME_MAIN string = "G"
+	//----------------------------------//
 	PROYECT_COD    string = "H"
-	PROYECT_NAME   string = "G"
+	PROYECT_NAME   string = "I"
 	PROYECT_STATUS string = "J"
 	PROYECT_SDATE  string = "L"
-
+	//----------------------------------//
 	EMPLOYEE_AGRESSO    string = "A"
 	EMPLOYEE_NAME       string = "B"
 	EMPLOYEE_DOMAIN     string = "C"

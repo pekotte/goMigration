@@ -34,6 +34,10 @@ func main() {
 		strIntBm      string
 	}
 
+	type sProyectMain struct {
+		strName string
+	}
+
 	type sProyect struct {
 		strCode      string
 		strName      string
@@ -42,26 +46,53 @@ func main() {
 	}
 
 	type sClient struct {
+		strName string
+	}
+
+	type sClientInt struct {
 		strCode string
 		strName string
 	}
 
+	type sCompleteData struct {
+		clientInt   sClientInt
+		client      sClient
+		proyectMain sProyectMain
+		proyect     sProyect
+		employee    sEmployee
+	}
+
 	rows := excelhandler.GetFileRows()
+
+	sliceExcelData := make([]sCompleteData, 3, 500)
 
 	i := 2
 	for rows.Next() {
-		fmt.Println("------------------------------------------------")
+		//fmt.Println("------------------------------------------------")
+		var newClientInt sClientInt = sClientInt{
+			excelhandler.GetOneData(excelhandler.CLIENT_COD_INT, i),
+			excelhandler.GetOneData(excelhandler.CLIENT_NAME_INT, i)}
+
+		if newClientInt.strName == "" {
+			continue
+		}
+
+		//fmt.Println(newClientInt)
+
 		var newClient sClient = sClient{
-			excelhandler.GetOneData(excelhandler.CLIENT_COD, i),
 			excelhandler.GetOneData(excelhandler.CLIENT_NAME, i)}
-		fmt.Println(newClient)
+		//fmt.Println(newClient)
+
+		var newProyectMain sProyectMain = sProyectMain{
+			excelhandler.GetOneData(excelhandler.PROYECT_NAME_MAIN, i)}
+		//fmt.Println(newProyectMain)
 
 		var newProyect sProyect = sProyect{
 			excelhandler.GetOneData(excelhandler.PROYECT_COD, i),
 			excelhandler.GetOneData(excelhandler.PROYECT_NAME, i),
 			excelhandler.GetOneData(excelhandler.PROYECT_STATUS, i),
 			excelhandler.GetOneData(excelhandler.PROYECT_SDATE, i)}
-		fmt.Println(newProyect)
+		//fmt.Println(newProyect)
 
 		var newEmployee sEmployee = sEmployee{
 			excelhandler.GetOneData(excelhandler.EMPLOYEE_AGRESSO, i),
@@ -85,9 +116,25 @@ func main() {
 			excelhandler.GetOneData(excelhandler.EMPLOYEE_N1, i),
 			excelhandler.GetOneData(excelhandler.EMPLOYEE_N2, i),
 			excelhandler.GetOneData(excelhandler.EMPLOYEE_INT_BM, i)}
-		fmt.Println(newEmployee)
+		//fmt.Println(newEmployee)
+
+		var completeData sCompleteData = sCompleteData{
+			newClientInt,
+			newClient,
+			newProyectMain,
+			newProyect,
+			newEmployee}
+
+		sliceExcelData = append(sliceExcelData, completeData)
 
 		i++
 	}
 
+	for j := range sliceExcelData {
+		if sliceExcelData[j].clientInt.strName == "" {
+			continue
+		}
+		fmt.Println("------------------------------------------------")
+		fmt.Println(sliceExcelData[j])
+	}
 }
