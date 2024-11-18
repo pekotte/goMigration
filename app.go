@@ -3,39 +3,138 @@ package main
 import (
 	"fmt"
 
-	"github.com/xuri/excelize/v2"
+	excelhandler "github.com/pekotte/goMigration/excelHandler"
 )
 
 func main() {
-	f, err := excelize.OpenFile("MyTool.xlsx")
-	if err != nil {
-		fmt.Println(err)
-		return
+
+	//excelhandler.OpenAndShowAllCells("MyTool.xlsx", "Hoja1")
+
+	type sEmployee struct {
+		strIdAgresso  string
+		strName       string
+		strDomain     string
+		strCmpyStDate string
+		strEmail      string
+		strPcAlten    string
+		strOficina    string
+		strLocation   string
+		strLocAssoc   string
+		strSalary     string
+		strBond       string
+		strRestaurant string
+		strInsurance  string
+		strHolidays   string
+		strComments   string
+		ui8SalaryDay  string
+		strBmADC      string
+		strCategory   string
+		strN1         string
+		strN2         string
+		strIntBm      string
 	}
-	defer func() {
-		if err := f.Close(); err != nil {
-			fmt.Println(err)
+
+	type sProyectMain struct {
+		strName string
+	}
+
+	type sProyect struct {
+		strCode      string
+		strName      string
+		strStatus    string
+		strStartDate string
+	}
+
+	type sClient struct {
+		strName string
+	}
+
+	type sClientInt struct {
+		strCode string
+		strName string
+	}
+
+	type sCompleteData struct {
+		clientInt   sClientInt
+		client      sClient
+		proyectMain sProyectMain
+		proyect     sProyect
+		employee    sEmployee
+	}
+
+	rows := excelhandler.GetFileRows()
+
+	sliceExcelData := make([]sCompleteData, 3, 500)
+
+	i := 2
+	for rows.Next() {
+		//fmt.Println("------------------------------------------------")
+		var newClientInt sClientInt = sClientInt{
+			excelhandler.GetOneData(excelhandler.CLIENT_COD_INT, i),
+			excelhandler.GetOneData(excelhandler.CLIENT_NAME_INT, i)}
+
+		if newClientInt.strName == "" {
+			continue
 		}
-	}()
-	// Obtener valor de la celda por el nombre y el eje de la hoja de trabajo dado.
-	/*cell, err := f.GetCellValue("Hoja1", "B2")
-	if err != nil {
-		fmt.Println(err)
-		return
+
+		//fmt.Println(newClientInt)
+
+		var newClient sClient = sClient{
+			excelhandler.GetOneData(excelhandler.CLIENT_NAME, i)}
+		//fmt.Println(newClient)
+
+		var newProyectMain sProyectMain = sProyectMain{
+			excelhandler.GetOneData(excelhandler.PROYECT_NAME_MAIN, i)}
+		//fmt.Println(newProyectMain)
+
+		var newProyect sProyect = sProyect{
+			excelhandler.GetOneData(excelhandler.PROYECT_COD, i),
+			excelhandler.GetOneData(excelhandler.PROYECT_NAME, i),
+			excelhandler.GetOneData(excelhandler.PROYECT_STATUS, i),
+			excelhandler.GetOneData(excelhandler.PROYECT_SDATE, i)}
+		//fmt.Println(newProyect)
+
+		var newEmployee sEmployee = sEmployee{
+			excelhandler.GetOneData(excelhandler.EMPLOYEE_AGRESSO, i),
+			excelhandler.GetOneData(excelhandler.EMPLOYEE_NAME, i),
+			excelhandler.GetOneData(excelhandler.EMPLOYEE_DOMAIN, i),
+			excelhandler.GetOneData(excelhandler.EMPLOYEE_CMPYSTDATE, i),
+			excelhandler.GetOneData(excelhandler.EMPLOYEE_EMAIL, i),
+			excelhandler.GetOneData(excelhandler.EMPLOYEE_PC_ALTEN, i),
+			excelhandler.GetOneData(excelhandler.EMPLOYEE_OFFICE, i),
+			excelhandler.GetOneData(excelhandler.EMPLOYEE_LOCATION, i),
+			excelhandler.GetOneData(excelhandler.EMPLOYEE_LOC_ASSOC, i),
+			excelhandler.GetOneData(excelhandler.EMPLOYEE_SALARY, i),
+			excelhandler.GetOneData(excelhandler.EMPLOYEE_BOND, i),
+			excelhandler.GetOneData(excelhandler.EMPLOYEE_RESTAURANT, i),
+			excelhandler.GetOneData(excelhandler.EMPLOYEE_INSURANCE, i),
+			excelhandler.GetOneData(excelhandler.EMPLOYEE_HOLIDAYS, i),
+			excelhandler.GetOneData(excelhandler.EMPLOYEE_COMMENTS, i),
+			excelhandler.GetOneData(excelhandler.EMPLOYEE_SALARY_DAY, i),
+			excelhandler.GetOneData(excelhandler.EMPLOYEE_BM_ADC, i),
+			excelhandler.GetOneData(excelhandler.EMPLOYEE_CATEGORY, i),
+			excelhandler.GetOneData(excelhandler.EMPLOYEE_N1, i),
+			excelhandler.GetOneData(excelhandler.EMPLOYEE_N2, i),
+			excelhandler.GetOneData(excelhandler.EMPLOYEE_INT_BM, i)}
+		//fmt.Println(newEmployee)
+
+		var completeData sCompleteData = sCompleteData{
+			newClientInt,
+			newClient,
+			newProyectMain,
+			newProyect,
+			newEmployee}
+
+		sliceExcelData = append(sliceExcelData, completeData)
+
+		i++
 	}
-	fmt.Println(cell)*/
-	// Obtener todas las filas en el Sheet1.
-	rows, err := f.GetRows("Hoja1")
-	if err != nil {
-		fmt.Println(err)
-		return
-	}
-	for _, row := range rows {
-		for _, colCell := range row {
-			fmt.Print(colCell, "\t")
-			fmt.Print("  ||  ")
+
+	for j := range sliceExcelData {
+		if sliceExcelData[j].clientInt.strName == "" {
+			continue
 		}
-		fmt.Println()
-		fmt.Println("======================================================================")
+		fmt.Println("------------------------------------------------")
+		fmt.Println(sliceExcelData[j])
 	}
 }
